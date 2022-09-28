@@ -1,4 +1,8 @@
-import { Card, } from "react-bootstrap"
+import { Card } from "react-bootstrap"
+import Rating from './Rating'
+
+import { PropTypes } from "prop-types";
+//import { propTypes } from "react-bootstrap/esm/Image";
 
 const Product = ({product}) => {
     return (
@@ -12,9 +16,10 @@ const Product = ({product}) => {
                 </a>
 
                 <Card.Text as="div">
-                    <div className="my-3">
-                        {product.rating} from {product.numReviews} Reviews
-                    </div>
+                    <Rating 
+                        value={product.rating} 
+                        text={`${product.numReviews} Reviews`}
+                    />
                 </Card.Text>
 
                 <Card.Text as="h3">
@@ -23,6 +28,14 @@ const Product = ({product}) => {
             </Card.Body>
         </Card>
     )
+}
+
+Rating.defaultProps = {color: '#f8e825'}
+Rating.propTypes = {
+    value: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    color: PropTypes.string
+
 }
 
 export default Product
