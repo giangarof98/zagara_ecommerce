@@ -3,7 +3,6 @@ import Rating from './Rating'
 
 import { PropTypes } from "prop-types";
 import { Link } from "react-router-dom";
-//import { propTypes } from "react-bootstrap/esm/Image";
 
 const Product = ({product}) => {
     return (
@@ -31,7 +30,7 @@ const Product = ({product}) => {
     )
 }
 
-Rating.defaultProps = {color: '#f8e825'}
+Rating.defaultProps = {color: '#f8e825', value:0}
 Rating.propTypes = {
     value: PropTypes.number.isRequired,
     text: PropTypes.string.isRequired,
