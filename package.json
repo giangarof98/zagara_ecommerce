@@ -7,7 +7,9 @@
   "scripts": {
     "start": "npm start --prefix frontend",
     "server": "node backend/server",
-    "dev": "npm run start & npm run server"
+    "dev": "npm run start & npm run server",
+    "data:import": "node backend/seeder",
+    "data:destroy": "node backend/seeder -d"
   },
   "repository": {
     "type": "git",
@@ -20,8 +22,10 @@
   },
   "homepage": "https://github.com/giangarof98/zagara_ecommerce#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
+    "express-async-handler": "^1.2.0",
     "mongoose": "^6.6.2",
     "nodemon": "^2.0.20"
   }
