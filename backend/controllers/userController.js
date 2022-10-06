@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import User from '../model/userModel.js';
+import generateToken from '../utils/generateToken.js'
 import mongoose from "mongoose";
 
 const authUser = asyncHandler(async (req,res) => {
@@ -14,7 +15,7 @@ const authUser = asyncHandler(async (req,res) => {
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
-            token: null
+            token: generateToken(user._id)
         })
     } else {
         res.status(401)
