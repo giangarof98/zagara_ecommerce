@@ -24,7 +24,6 @@ const ProductScreen = () => {
 
     const addToCartHandler = () => {
         navigate(`/cart/${id}?qty=${qty}`)
-        //navigate(`/cart/`)
     }
     
     return (
@@ -86,6 +85,13 @@ const ProductScreen = () => {
                                     )}
 
                                     <ListGroup.Item>
+                                        {/* <Button
+                                            onClick={addToCartHandler} 
+                                            className="btn btn-block" 
+                                            type="button" 
+                                            disabled={product.countInStock === 0}>
+                                            Add to cart
+                                        </Button> */}
                                         <Button
                                             onClick={addToCartHandler} 
                                             className="btn btn-block" 
@@ -93,6 +99,7 @@ const ProductScreen = () => {
                                             disabled={product.countInStock === 0}>
                                             Add to cart
                                         </Button>
+
                                     </ListGroup.Item>
                                 </ListGroup>
                             </Card>
