@@ -6,7 +6,8 @@ import { Button, Form, Row, Col, } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import {getUserDetails} from '../actions/userAction'
+import {getUserDetails, getUserUpdate} from '../actions/userAction'
+import { USER_UPDATE_RESET } from '../constants/userConstants';
 
 const ProfileScreen = () => {
     const navigate = useNavigate()
@@ -20,17 +21,23 @@ const ProfileScreen = () => {
     //const redirect = location.search ? location.search.split('=')[1] : '/';
 
     const dispatch = useDispatch();
-    const userDetails = useSelector((state) => state.userDetails);
-    const {loading, error, user} = userDetails
 
-    const userLogin = useSelector(state => state.userLogin);
-    const {userInfo} = userLogin
+    const userDetails = useSelector((state) => state.userDetails);
+    const {loading, error, user} = userDetails;
+
+    const userLogin = useSelector((state) => state.userLogin);
+    const {userInfo} = userLogin;
+
+    const userUpdate = useSelector((state) => state.userUpdate);
+    const {success} = userUpdate
+
 
     useEffect(() => {
         if(!userInfo){
             navigate('/login')
         } else {
-            if(!user.name){
+            if(!user.name || !user || success){
+                dispatch({type: USER_UPDATE_RESET})
                 dispatch(getUserDetails('profile'))
             } else {
                 setName(user.name)
@@ -44,7 +51,7 @@ const ProfileScreen = () => {
         if(password !== confirmPassword){
             setMessage('Password do not match')
         }else{
-            //dispatch(register(name,email,password))
+            dispatch(getUserUpdate({id: user._id, name, email, password}))
 
         }
 
@@ -56,6 +63,7 @@ const ProfileScreen = () => {
                     <h2>User Profile</h2>
                     {message && <Message variant='danger'>{message}</Message>}
                     {error && <Message variant='danger'>{error}</Message>}
+                    {success && <Message variant='success'>Information Updated!</Message>}
                     {loading && <Loader/>}
                     <Form onSubmit={submitHandler}>
                         <Form.Group controlId='name'>
@@ -85,7 +93,7 @@ const ProfileScreen = () => {
                                 onChange={(e) => setPassword(e.target.value)}>
                             </Form.Control>
                         </Form.Group>
-                        <Form.Group controlId='password'>
+                        <Form.Group controlId='passwordConfirmation'>
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control   
                                 type='password' 
