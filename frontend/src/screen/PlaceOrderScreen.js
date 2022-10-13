@@ -1,14 +1,16 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 import { useNavigate } from 'react-router';
-import { Button, Row, Col, ListGroup, Image, Card, ListGroupItem } from 'react-bootstrap';
+import { Button, Row, Col, ListGroup, Image, Card} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
 import { Link } from "react-router-dom";
+import {createOrder} from '../actions/orderAction';
 
 const PlaceOrderScreen = () => {
-    //const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
     const addDecimals = (num) => {
         return (Math.round(num * 100) / 100).toFixed(2)
     }
@@ -19,15 +21,34 @@ const PlaceOrderScreen = () => {
     //Shipment price
     cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 100)
     //tax price
-    cart.TaxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)))
+    cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)))
     //total price
     cart.totalPrice = (
         Number(cart.itemsPrice) + 
         Number(cart.shippingPrice) + 
-        Number(cart.TaxPrice)).toFixed(2)
+        Number(cart.taxPrice)).toFixed(2)
+
+    const orderCreate = useSelector(state => state.orderCreate);
+    const {order,success, error} = orderCreate;
+
+    useEffect(() => {
+        if(success){
+            navigate(`/order/${order._id}`)
+        }
+        // eslint-disable-next-line
+    }, [success])
 
     const placeOrderHandler = (e) => {
         e.preventDefault()
+        dispatch(createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            itemsPrice: cart.itemsPrice,
+            shippingPrice: cart.shippingPrice,
+            taxPrice: cart.taxPrice,
+            totalPrice: cart.totalPrice
+        }))
     }
     return (
         <>
@@ -106,7 +127,7 @@ const PlaceOrderScreen = () => {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Tax</Col>
-                                    <Col>${cart.TaxPrice}</Col>
+                                    <Col>${cart.taxPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
 
@@ -116,7 +137,9 @@ const PlaceOrderScreen = () => {
                                     <Col>${cart.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
-
+                                <ListGroup.Item>
+                                    {error && <Message variant='danger'>{error}</Message>}
+                                </ListGroup.Item>
                             <ListGroup.Item>
                                 <Button type="button" 
                                         className="btn-block" 
