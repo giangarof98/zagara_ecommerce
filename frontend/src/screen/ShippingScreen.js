@@ -11,10 +11,10 @@ import CheckoutSteps from '../components/CheckoutSteps'
 const ShippingScreen = () => {
     const cart = useSelector(state => state.cart);
     const {shippingAddress} = cart
-    const [address, setAddress] = useState(shippingAddress.address)
-    const [city, setCity] = useState(shippingAddress.city)
-    const [postalCode, setPostalCode] = useState(shippingAddress.postalCode)
-    const [country, setCountry] = useState(shippingAddress.country)
+    const [address, setAddress] = useState(shippingAddress.address || '')
+    const [city, setCity] = useState(shippingAddress.city || '')
+    const [postalCode, setPostalCode] = useState(shippingAddress.postalCode || '')
+    const [country, setCountry] = useState(shippingAddress.country || '')
     const navigate = useNavigate()
     const dispatch = useDispatch()
 

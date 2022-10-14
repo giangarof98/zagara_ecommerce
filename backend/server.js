@@ -14,10 +14,6 @@ const app = express();
 
 app.use(express.json())
 
-// app.get('/', (req,res) => {
-//     res.send('yes')
-// });
-
 app.use('/api/products', productRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
