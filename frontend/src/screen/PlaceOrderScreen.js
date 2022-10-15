@@ -15,7 +15,7 @@ const PlaceOrderScreen = () => {
         return (Math.round(num * 100) / 100).toFixed(2)
     }
 
-    const cart = useSelector(state => state.cart)
+    const cart = useSelector((state) => state.cart)
     //calculate price
     cart.itemsPrice = addDecimals(cart.cartItems.reduce((acc,item) => acc + item.price * item.qty, 0))
     //Shipment price
@@ -38,8 +38,8 @@ const PlaceOrderScreen = () => {
         // eslint-disable-next-line
     }, [success])
 
-    const placeOrderHandler = (e) => {
-        e.preventDefault()
+    const placeOrderHandler = () => {
+        //e.preventDefault()
         dispatch(createOrder({
             orderItems: cart.cartItems,
             shippingAddress: cart.shippingAddress,

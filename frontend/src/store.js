@@ -11,6 +11,7 @@ import {
     userRegisterReducer, 
     userUpdateReducer
 } from './reducers/userReducers';
+
 import {
     orderCreateReducer,
     orderDetailsReducer,
@@ -39,9 +40,11 @@ const shippingAddressFromStorage = localStorage.getItem('shippingAddress') ? JSO
 
 let initialState = {
     //cartItems: cartItemsFromStorage,
-    cart: { cartItems: cartItemsFromStorage, 
-            shippingAddress: shippingAddressFromStorage},
-    userLogin: userInfoFromStorage,
+    cart: { 
+        cartItems: cartItemsFromStorage, 
+        shippingAddress: shippingAddressFromStorage
+    },
+        userLogin: userInfoFromStorage,
 };
 
 //const middleware = [thunk];

@@ -15,7 +15,7 @@ const addOrderItems = asyncHandler(async (req,res) => {
         if(orderItems && orderItems.length === 0){
             res.status(400)
             throw new Error('No order items')
-            return
+            
         } else {
             const order = new Order({
                 orderItems,
@@ -46,7 +46,7 @@ const getOrderById = asyncHandler(async (req,res) => {
 const updateOrderToPaid = asyncHandler(async (req,res) => {
     const order = await Order.findById(req.params.id)
     if(order){
-        order.isPai = true;
+        order.isPaid = true;
         order.paidAt = Date.now();
         order.paymentResult = {
             id: req.body.id,

@@ -20,6 +20,10 @@ app.use('/api/order', orderRoutes);
 
 //custom middleware
 
+app.get('/api/config/paypal', (req,res) => 
+    res.send(process.env.PAYPAL_CLIENT_ID)
+)
+
 app.use(errorHandler)
 app.use(notFound)
 

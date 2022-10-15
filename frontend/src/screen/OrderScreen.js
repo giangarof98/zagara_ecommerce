@@ -1,35 +1,72 @@
-import React, {useEffect} from "react";
+import React, {useState, useEffect} from "react";
+import {PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import {Link, useParams} from 'react-router-dom'
 //import { useNavigate } from 'react-router';
 import { Row, Col, ListGroup, Image, Card} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import {getOrderDetails} from '../actions/orderAction';
+import {getOrderDetails, payOrder} from '../actions/orderAction';
+import { ORDER_PAY_RESET } from "../constants/orderConstants";
+
+import axios from "axios";
 
 const OrderScreen = () => {
     const dispatch = useDispatch();
     const orderId = useParams().id;
+    const [sdkReady, setSdkReady] = useState(false)
     // const navigate = useNavigate();
 
     const orderDetails = useSelector((state) => state.orderDetails);
     const {order,loading, error} = orderDetails;
+    console.log(order)
+    const orderPay = useSelector((state) => state.orderPay);
+    const {loading: loadingPay, success: successPay } = orderPay;
+
+    // const userLogin = useSelector((state) => state.userLogin)
+    // const { userInfo } = userLogin
 
     if(!loading){
-        const addDecimals = (num) => {return (Math.round(num * 100) / 100).toFixed(2)}
-        order.itemsPrice = addDecimals(order.orderItems.reduce((acc,item) => acc + item.price * item.qty, 0))
-
+        const addDecimals = (num) => {
+            return (Math.round(num * 100) / 100).toFixed(2)
+        }
+        order.itemsPrice = addDecimals(
+            order.orderItems.reduce((acc,item) => acc + item.price * item.qty, 0)
+        )
     }
 
     //console.log(order.orderItems)
     useEffect(() => {
-        if(!order || order._id !== orderId) {
-            dispatch(getOrderDetails(orderId))
+        const addPayPalScript = async () => {
+            const {data: clientId} = await axios.get(`/api/config/paypal`)
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+            script.async = true;
+            script.onload = () => {
+                setSdkReady(true)
+            }
+            document.body.appendChild(script)
         }
-        //dispatch(getOrderDetails(orderId))
-    }, [orderId, order, dispatch])
+        
+        if(!order || successPay || order._id !== orderId) {
+            dispatch({type: ORDER_PAY_RESET})
+            dispatch(getOrderDetails(orderId))
+        } else if(!order.isPaid){
+            if(!window.paypal){
+                addPayPalScript()
+            } else {
+                setSdkReady(true)
+            }
+        }
+    }, [dispatch, orderId, successPay, order])
 
-    return  loading ?
+    const successPaymentHandler = (paymentResult) => {
+        dispatch(payOrder(orderId, paymentResult))
+        
+    }
+
+    return loading ?
              <Loader /> 
             : error ? <Message variant='danger'>{error}</Message>
             : <> 
@@ -39,7 +76,7 @@ const OrderScreen = () => {
                         <ListGroup variant="flush">
                             <ListGroup.Item>
                                 <h2>Shipping</h2>
-                                <p><strong>Name: {order.user.name}</strong></p>
+                                <p><strong>Name: </strong>{order.user}</p>
                                 <p>Email: <a href={`mailto:${order.user.email}`}>{order.user.email}</a></p>
                                 <p>
                                     <strong>Address: </strong>
@@ -57,7 +94,7 @@ const OrderScreen = () => {
                                 <h2>Payment Method</h2>
                                 <p>
                                     <strong>Method: </strong>
-                                    {order.paymentMethod}, {''}
+                                    {order.paymentMethod} {''}
                                 </p>
                                 {order.isPaid ? <Message variant='success'>Paid on {order.paidAt}</Message> 
                                     : <Message variant='danger'>Not paid</Message>}
@@ -128,12 +165,26 @@ const OrderScreen = () => {
                                     </Row>
                                 </ListGroup.Item>
 
+                                {!order.isPaid && (
+                                    <ListGroup.Item>
+                                        {loadingPay && <Loader />}
+                                        {!sdkReady ? ( <Loader /> ) : (
+                                            <PayPalScriptProvider>
+                                                <PayPalButtons 
+                                                    amount={order.totalPrice}
+                                                    onSuccess={successPaymentHandler} 
+                                                />
+                                            </PayPalScriptProvider>
+                                        )}
+                                    </ListGroup.Item>
+                                )}
+
                             </ListGroup>
                         </Card>                                 
                     </Col>
                 </Row>
             </>
-            
+        
 }
 
 export default OrderScreen;
