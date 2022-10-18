@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 //import { useLocation} from 'react-router-dom';
 import { useNavigate } from 'react-router';
-import { Button, Form, Row, Col, } from 'react-bootstrap';
+import { Table, Button, Form, Row, Col, } from 'react-bootstrap';
+import {LinkContainer} from 'react-router-bootstrap';
 //import FormContainer from '../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import {getUserDetails, getUserUpdate} from '../actions/userAction'
+import { myOrderList } from '../actions/orderAction';
 import { USER_UPDATE_RESET } from '../constants/userConstants';
 
 const ProfileScreen = () => {
@@ -24,13 +26,15 @@ const ProfileScreen = () => {
 
     const userDetails = useSelector((state) => state.userDetails);
     const {loading, error, user} = userDetails;
-
+    
     const userLogin = useSelector((state) => state.userLogin);
     const {userInfo} = userLogin;
-
+    
     const userUpdate = useSelector((state) => state.userUpdate);
     const {success} = userUpdate
-
+    
+    const orderMyList = useSelector(state => state.orderMyList);
+    const {loading:loadingOrders, error: errorOrders, orders} = orderMyList;
 
     useEffect(() => {
         if(!userInfo){
@@ -38,6 +42,7 @@ const ProfileScreen = () => {
         } else {
             if(!user.name || !user || success){
                 dispatch({type: USER_UPDATE_RESET})
+                dispatch(myOrderList())
                 dispatch(getUserDetails('profile'))
             } else {
                 setName(user.name)
@@ -107,6 +112,40 @@ const ProfileScreen = () => {
                 </Col>
                 <Col md={9}>
                     <h2>My Orders</h2>
+                    {loadingOrders ? 
+                    (<Loader /> ): errorOrders ? 
+                    (<Message variant='danger'>{errorOrders}</Message>) : 
+                    (
+                        <Table striped bordered hover responsive className="table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>DATE</th>
+                                    <th>TOTAL</th>
+                                    <th>PAID</th>
+                                    <th>DELIVERED</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orders.map((order) => (
+                                    <tr key={order._id}>
+                                        <td>{order._id}</td>
+                                        <td>{order.createdAt.substring(0,10)}</td>
+                                        <td>{order.totalPrice}</td>
+                                        <td>{order.isPaid ? order.isPaidAt.substring(0, 10) : (<i className='fas fa-times' style={{color: 'red'}}></i>)}</td>
+                                        <td>{order.isDelivered ? order.deliveredAt.substring(0, 10) : (<i className='fas fa-times' style={{color: 'red'}}></i>)}</td>
+
+                                        <td>
+                                            <LinkContainer to={`/order/${order._id}`}>
+                                                <Button variant='light'>Details</Button>
+                                            </LinkContainer>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    )} 
                 </Col>
             </Row>
     )

@@ -29,14 +29,16 @@ const PlaceOrderScreen = () => {
         Number(cart.taxPrice)).toFixed(2)
 
     const orderCreate = useSelector(state => state.orderCreate);
-    const {order,success, error} = orderCreate;
+    const {order, success, error} = orderCreate;
 
     useEffect(() => {
         if(success){
             navigate(`/order/${order._id}`)
+            //dispatch({ type: USER_DETAILS_RESET })
+            //dispatch({ type: ORDER_CREATE_RESET })
         }
         // eslint-disable-next-line
-    }, [success])
+    }, [navigate, success])
 
     const placeOrderHandler = () => {
         //e.preventDefault()

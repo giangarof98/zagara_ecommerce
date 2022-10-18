@@ -14,19 +14,19 @@ import axios from "axios";
 const OrderScreen = () => {
     const dispatch = useDispatch();
     const orderId = useParams().id;
+
     const [sdkReady, setSdkReady] = useState(false)
     // const navigate = useNavigate();
 
     const orderDetails = useSelector((state) => state.orderDetails);
-    const {order,loading, error} = orderDetails;
+    const {order, loading, error} = orderDetails;
 
-    console.log(order)
 
     const orderPay = useSelector((state) => state.orderPay);
     const {loading: loadingPay, success: successPay } = orderPay;
 
-    // const userLogin = useSelector((state) => state.userLogin)
-    // const { userInfo } = userLogin
+    const userLogin = useSelector((state) => state.userLogin)
+    const { userInfo } = userLogin
 
     if(!loading){
         const addDecimals = (num) => {
@@ -61,7 +61,7 @@ const OrderScreen = () => {
                 setSdkReady(true)
             }
         }
-    }, [dispatch, orderId, successPay, order])
+    }, [dispatch, orderId, successPay, order, userInfo])
 
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(orderId, paymentResult))
@@ -78,8 +78,8 @@ const OrderScreen = () => {
                         <ListGroup variant="flush">
                             <ListGroup.Item>
                                 <h2>Shipping</h2>
-                                <p><strong>Name: </strong>{order.user.name}</p>
-                                <p>Email: <a href={`mailto:${order.user.email}`}>{order.user.email}</a></p>
+                                <p><strong>Name: </strong>{userInfo.name}</p>
+                                <p>Email: <a href={`mailto:${userInfo.email}`}>{userInfo.email}</a></p>
                                 <p>
                                     <strong>Address: </strong>
                                     {order.shippingAddress.address}, {''}
