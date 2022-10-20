@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import Product from '../model/productModel.js';
-import mongoose from "mongoose";
 
 const getProducts = asyncHandler(async (req,res) => {
     const products = await Product.find({});
@@ -17,7 +16,19 @@ const getOne = asyncHandler(async (req,res) => {
     }
 })
 
+const deleteProduct = asyncHandler(async (req,res) => {
+    const product = await Product.findById(req.params.id)
+    if(product){
+        await product.remove();
+        res.json({message: `Product Removed!`})
+    } else {
+        res.status(404)
+        throw new Error('Product not found')
+    }
+})
+
 export{
     getProducts,
-    getOne
+    getOne,
+    deleteProduct
 }
