@@ -55,7 +55,7 @@ const LoginScreen = () => {
                             onChange={(e) => setPassword(e.target.value)}>
                         </Form.Control>
                     </Form.Group>
-                    <Button type='submit' variant='primary' className='my-3'>Create Account</Button>
+                    <Button type='submit' variant='primary' className='my-3'>Log In</Button>
                 </Form>
                 <Row className='py-3'>
                     <Col>
