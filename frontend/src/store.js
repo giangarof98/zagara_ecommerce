@@ -49,7 +49,7 @@ const reducer = combineReducers({
     orderDetails: orderDetailsReducer,
     orderPay: orderPayReducer,
     orderMyList: getMyOrderListReducer,
-    orderListAll: getAllOrdersReducer
+    orderList: getAllOrdersReducer
 
 });
 
