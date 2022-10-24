@@ -3,6 +3,8 @@ import {Container} from 'react-bootstrap'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Header from './components/Header';
 import Footer from './components/Footer';
+//import SearchBox from './components/SearchBox';
+
 import HomeScreen from './screen/HomeScreen';
 import ProductScreen from './screen/ProductScreen';
 import CartScreen from './screen/CartScreen';
@@ -41,6 +43,7 @@ const App = () => {
               <Route path='/login' element={<LoginScreen/>} />
               
               <Route path='/' element={<HomeScreen/>} index />
+              <Route path='/search/:keyword' element={<HomeScreen/>} />
               
               <Route path='/product/:id' element={<ProductScreen/>} />
               <Route path='/order/:id' element={<OrderScreen/>} />

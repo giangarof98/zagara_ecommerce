@@ -1,4 +1,5 @@
 import React from "react";
+//import { Route } from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
 import { LinkContainer } from "react-router-bootstrap";
 import {Container, 
@@ -7,6 +8,7 @@ import {Container,
         NavDropdown, 
         } from 'react-bootstrap'
 import { logout } from "../actions/userAction";
+import SearchBox from './SearchBox'
 
 const Header = () => {
     const dispatch = useDispatch()
@@ -24,6 +26,8 @@ const Header = () => {
                     </LinkContainer>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
+                        <SearchBox />
+                        {/* <Route render={(navigate) => <SearchBox navigate={navigate}/>} /> */}
                         <Nav
                             className="ms-auto my-2 my-lg-0"
                             style={{ maxHeight: '100px' }}
