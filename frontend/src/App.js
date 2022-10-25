@@ -3,7 +3,6 @@ import {Container} from 'react-bootstrap'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Header from './components/Header';
 import Footer from './components/Footer';
-//import SearchBox from './components/SearchBox';
 
 import HomeScreen from './screen/HomeScreen';
 import ProductScreen from './screen/ProductScreen';
@@ -31,6 +30,7 @@ const App = () => {
               <Route path='/admin/orderlist' element={<OrderListScreen/>} />
               <Route path='/admin/userlist' element={<UserListScreen/>} />
               <Route path='/admin/productlist' element={<ProductListScreen/>} />
+              <Route path='/admin/productlist/:pageNumber' element={<ProductListScreen/>} />
               
               <Route path='/admin/user/:id/edit' element={<UserEditScreen/>} />
               <Route path='/admin/product/:id/edit' element={<ProductEditScreen/>} />
@@ -42,8 +42,10 @@ const App = () => {
               <Route path='/register' element={<RegisterScreen/>} />
               <Route path='/login' element={<LoginScreen/>} />
               
-              <Route path='/' element={<HomeScreen/>} index />
-              <Route path='/search/:keyword' element={<HomeScreen/>} />
+              <Route path='/search/:keyword' element={<HomeScreen/>}/>
+              <Route path='/search/:keyword/page/:pageNumber' element={<HomeScreen/>}/>
+              <Route path='/' element={<HomeScreen/>} index/>
+              <Route path='/page/:pageNumber' element={<HomeScreen/>} />
               
               <Route path='/product/:id' element={<ProductScreen/>} />
               <Route path='/order/:id' element={<OrderScreen/>} />
