@@ -7,6 +7,7 @@ import {
     createProduct,
     updateProduct,
     createReview,
+    getTopProducts
 } from '../controllers/productController.js';
 import {protect, admin} from '../middleware/authMiddleware.js'
 
@@ -17,7 +18,10 @@ router.route('/')
     .get(getProducts)
     .post(protect, admin, createProduct)
 
+router.route('/top').get(getTopProducts)
+
 router.route('/:id/reviews').post(protect, createReview)
+
 
 //Fetch product by id
 router.route('/:id')
